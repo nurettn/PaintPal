@@ -1,7 +1,7 @@
 asgiref==3.2.10
 coverage==5.2.1
 Django==3.1
-flake8==3.8.3
+flake8==3.8.3,<3.9.0
 mccabe==0.6.1
 Pillow==6.2.2
 pycodestyle==2.6.0
