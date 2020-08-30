@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<form class="form-inline">
+
+    <label class="sr-only" for="inlineFormInputGroupUsername2">Nickname</label>
+    <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+            <div class="input-group-text">@</div>
+        </div>
+        <input type="text" class="form-control" id="inlineFormInputGroupUsername2" placeholder="Nickname">
+    </div>
+
+    <button type="submit" class="btn btn-primary mb-2">Host a game</button>
+</form>
+
+{% endblock content %}
