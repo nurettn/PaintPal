@@ -1,20 +1,12 @@
-FROM python:3.8-alpine
+FROM python:3.9-alpine
 MAINTAINER Nurettin ABACI
 
 ENV PYTHONUNBUFFERED 1
 
-RUN apk add --no-cache jpeg-dev zlib-dev
-RUN apk add --no-cache --virtual .builds-deps \
-    build-base linux-headers
+RUN apk update && apk add bash build-base python3-dev libffi-dev openssl-dev
 
 COPY ./requirements.txt /requirements.txt
-
-RUN apk add --update --no-cache postgresql-client
-RUN apk add --update --no-cache --virtual .tmp-build-deps \
-        gcc libc-dev linux-headers postgresql-dev
-
-RUN pip install -r /requirements.txt
-RUN apk del .tmp-build-deps
+RUN pip install -r requirements.txt
 
 RUN mkdir /app
 WORKDIR /app
