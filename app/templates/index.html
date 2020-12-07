@@ -23,14 +23,14 @@
         <div class="align-items-start" style="margin: 8px;padding: 8px;">
 
             <div class="input-group" style="margin: 10px;">
-                <div class="input-group-prepend"><span class="input-group-text">Room Code</span></div>
+                <div class="input-group-prepend"><span class="input-group-text">Nickname</span></div>
                 {% csrf_token %}
                 {{ join_room_form.nickname }}
                 <div class="input-group-append"></div>
             </div>
 
             <div class="input-group" style="margin: 10px;">
-                <div class="input-group-prepend"><span class="input-group-text">Nickname</span></div>
+                <div class="input-group-prepend"><span class="input-group-text">Room Code</span></div>
                 <div class="input-group-append"></div>
                 {% csrf_token %}
                 {{ join_room_form.temp_room_code }}

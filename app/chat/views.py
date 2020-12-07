@@ -51,9 +51,8 @@ def index(request):
                 else:
                     artist.save()
                     room.artists.add(artist)
-                    folks = Room.objects.get(
-                        name=room_code).artists.values_list('nickname',
-                                                            flat=True)
+                    folks = Room.objects.get(name=room_code) \
+                        .artists.values_list('nickname', flat=True)
                     context = {'room_code': room_code,
                                'folks': folks,
                                'nickname': artist.nickname}
