@@ -3,191 +3,213 @@
 {% block content %}
 
 
-<div class="container">
-    <div class="justify-content-center row">
-        <div class="col-md-6">
-            <h1>Room Code&nbsp;<span style="color:blue;"><br>{{ room_code }}<br><br></span></h1>
-        </div>
-        <div class="col">
-            <h1>Drawer&nbsp;<span style="color:blue;"><br>{{ nickname }}<br><br></span></h1>
-        </div>
-        <div class="col">
-            <h1>Time Left&nbsp;<span style="color:blue;">30</span>s</h1>
-        </div>
-    </div>
-
-    <div>
-        <div class="row">
-            <div class="col-md-2">
-                <div id="statusBox"><label>Players</label>
-                    <ol class="list-group">
-
-                        {% for folk in folks %}
-                        <li class="list-group-item"><span class="statusBoxUsername">{{ folk }} </span><span
-                                class="statusBoxPoints">0 pts</span></li>
-                        {% endfor %}
-
-                    </ol>
-                </div>
+    <div class="container">
+        <div class="justify-content-center row">
+            <div class="col-md-6">
+                <h1>Room Code&nbsp;<span style="color:blue;"><br>{{ room_code }}<br><br></span></h1>
             </div>
-            <div class="col-md-7" id="paint">
-                <canvas id="canvas" width="620" height="500" style="filter: blur(1px);"></canvas>
+            <div class="col">
+                <h1>Drawer&nbsp;<span style="color:blue;"><br>{{ nickname }}<br><br></span></h1>
             </div>
+            <div class="col">
+                <h1>Time Left&nbsp;<span style="color:blue;">30</span>s</h1>
+            </div>
+        </div>
 
-            <div class="col-md-3">
-                <div class="chat-container" data-children-count="1"
-                    style="width: 300px;height: 500px;border-radius: 15px;border: 1px solid lightsteelblue ;">
-                    <div id="chat" spellcheck="false"
-                        style="width: 280px;height: 440px;border-style: none;min-width: 40px;padding-top: 15px;font-size: 18px;font-family: Arial, Helvetica, sans-serif;padding-left: 10px;">
+        <div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div id="statusBox"><label>Players</label>
+                        <ol class="list-group">
+
+                            {% for folk in folks %}
+                                <li class="list-group-item"><span class="statusBoxUsername">{{ folk }} </span><span
+                                        class="statusBoxPoints">0 pts</span></li>
+                            {% endfor %}
+
+                        </ol>
                     </div>
-                    <input type="text" id="chat-message-input" placeholder="Enter your message here" size="80">
                 </div>
+                <div class="col-md-7" id="paint">
+                    <canvas id="canvas" width="620" height="500" style="filter: blur(1px);"></canvas>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="chat-container" data-children-count="1"
+                         style="width: 300px;height: 500px;border-radius: 15px;border: 1px solid lightsteelblue ;">
+                        <div id="chat" spellcheck="false"
+                             style="width: 280px;height: 440px;border-style: none;min-width: 40px;padding-top: 15px;font-size: 18px;font-family: Arial, Helvetica, sans-serif;padding-left: 10px;">
+                        </div>
+                        <input type="text" id="chat-message-input" placeholder="Enter your message here" size="80">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="padding-top: 10px;">
+
+            <div class="col">
+                <div class="brushColor" onclick="ctx.strokeStyle = 'black';"
+                     style="border-radius: 50%;width: 30px;height: 30px;background: black;"></div>
+            </div>
+            <div class="col">
+                <div class="brushColor" onclick="ctx.strokeStyle = 'blue';"
+                     style="border-radius: 50%;width: 30px;height: 30px;background: blue;"></div>
+            </div>
+            <div class="col">
+                <div class="brushColor" onclick="ctx.strokeStyle = 'red';"
+                     style="border-radius: 50%;width: 30px;height: 30px;background: red;"></div>
+            </div>
+            <div class="col">
+                <div class="brushColor" onclick="ctx.strokeStyle = 'green';"
+                     style="border-radius: 50%; width:30px;height:30px;background:green;"></div>
+            </div>
+            <div class="col">
+                <div onclick="clearCanvas()" id="clearScreen" style="border-radius: 50%; width:30px;height:30px;">
+                    clear
+                </div>
+            </div>
+            <div class="col">
+                <div onclick="ctx.strokeStyle = 'white';" style="border-radius: 50%; width:30px;height:30px;">erase
+                </div>
+            </div>
+            <div class="col">
+                <div class="slidecontainer" data-children-count="1">Size</div>
+                <input oninput="ctx.lineWidth=this.value;" type="range" class="slider" min="5" max="30" value="10">
             </div>
         </div>
     </div>
 
-    <div class="row" style="padding-top: 10px;">
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
 
-        <div class="col">
-            <div class="brushColor" onclick="ctx.strokeStyle = 'black';"
-                style="border-radius: 50%;width: 30px;height: 30px;background: black;"></div>
-        </div>
-        <div class="col">
-            <div class="brushColor" onclick="ctx.strokeStyle = 'blue';"
-                style="border-radius: 50%;width: 30px;height: 30px;background: blue;"></div>
-        </div>
-        <div class="col">
-            <div class="brushColor" onclick="ctx.strokeStyle = 'red';"
-                style="border-radius: 50%;width: 30px;height: 30px;background: red;"></div>
-        </div>
-        <div class="col">
-            <div class="brushColor" onclick="ctx.strokeStyle = 'green';"
-                style="border-radius: 50%; width:30px;height:30px;background:green;"></div>
-        </div>
-        <div class="col">
-            <div onclick="clearCanvas()" id="clearScreen" style="border-radius: 50%; width:30px;height:30px;">
-                clear</div>
-        </div>
-        <div class="col">
-            <div onclick="ctx.strokeStyle = 'white';" style="border-radius: 50%; width:30px;height:30px;">erase</div>
-        </div>
-        <div class="col">
-            <div class="slidecontainer" data-children-count="1">Size</div>
-            <input oninput="ctx.lineWidth=this.value;" type="range" class="slider" min="5" max="30" value="10">
-        </div>
-    </div>
-</div>
+    {{ room_code|json_script:"room-name" }}
+    {{ nickname|json_script:"nickname" }}
 
-<script src="../static/js/jquery.min.js"></script>
-<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+    <script>
 
-{{ room_code|json_script:"room-name" }}
-{{ nickname|json_script:"nickname" }}
+        // Canvas
 
-<script>
-
-    // Canvas
-
-    // Definitions
-    var canvas = document.getElementById('canvas');
-    var canvasDiv = document.getElementById('paint');
-    canvasDiv.style.border = "thick solid #0000FF";
-    var ctx = canvas.getContext('2d');
-    var flag = false, prevX = 0, prevY = 0;
+        // Definitions
+        var canvas = document.getElementById('canvas');
+        var canvasDiv = document.getElementById('paint');
+        canvasDiv.style.border = "thick solid #0000FF";
+        var ctx = canvas.getContext('2d');
+        var flag = false, prevX = 0, prevY = 0;
 
 
-    // Specifications
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.fillStyle = "#000000";
-    ctx.strokeStyle = 'black'; // initial brush color
-    ctx.lineWidth = 10; // initial brush width
-    ctx.globalAlpha = 0.8;
+        // Specifications
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.fillStyle = "#000000";
+        ctx.strokeStyle = 'black'; // initial brush color
+        ctx.lineWidth = 10; // initial brush width
+        ctx.globalAlpha = 0.8;
 
-    canvas.addEventListener("mousemove", function (e) {
-        console.log()
-        findxy('move', e);
-    }, false);
-    canvas.addEventListener("mousedown", function (e) {
-        findxy('down', e)
-    }, false);
-    canvas.addEventListener("mouseup", function (e) {
-        findxy('up', e)
-    }, false);
-    canvas.addEventListener("mouseout", function (e) {
-        findxy('out', e)
-    }, false);
+        canvas.addEventListener("mousemove", function (e) {
+            console.log()
+            findxy('move', e);
+        }, false);
+        canvas.addEventListener("mousedown", function (e) {
+            findxy('down', e)
+        }, false);
+        canvas.addEventListener("mouseup", function (e) {
+            findxy('up', e)
+        }, false);
+        canvas.addEventListener("mouseout", function (e) {
+            findxy('out', e)
+        }, false);
 
-    function draw(newX, newY) {
-        ctx.beginPath();
-        ctx.moveTo(prevX, prevY);
-        ctx.lineTo(newX, newY);
-        ctx.stroke();
-        ctx.closePath();
-        prevX = newX;
-        prevY = newY;
-    }
-
-    function findxy(res, e) {
-        if (res == 'down') {
-            data = { 'x': e.clientX - canvas.offsetLeft - canvasDiv.offsetLeft, 'y': e.clientY - canvas.offsetTop - canvasDiv.offsetTop };
-            prevX = data['x'];
-            prevY = data['y'];
-            flag = true;
+        function draw(newX, newY) {
+            ctx.beginPath();
+            ctx.moveTo(prevX, prevY);
+            ctx.lineTo(newX, newY);
+            ctx.stroke();
+            ctx.closePath();
+            prevX = newX;
+            prevY = newY;
         }
 
-        if (res == 'up' || res == "out") {
-            flag = false;
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        if (res == 'move') {
-            if (flag) {
-                data = { 'x': e.clientX - canvas.offsetLeft - canvasDiv.offsetLeft, 'y': e.clientY - canvas.offsetTop - canvasDiv.offsetTop };
-                draw(data['x'], data['y']);
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        console.log('Room name:' + roomName);
+        console.log('Player Nickname:' + nickname.text);
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const user_message = data.message;
+            document.querySelector('.chat-container').innerText += user_message + '\n';
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function (e) {
+            if (e.keyCode === 13) { //enter, return
+                const messageInputDom = document.querySelector('#chat-message-input');
+                const text = messageInputDom.value;
+                chatSocket.send(JSON.stringify({
+                    'type': 'message',
+                    'text': text
+                }));
+                console.log("sent:" + text)
+                messageInputDom.value = '';
+            }
+        };
+
+        function findxy(res, e) {
+            if (res == 'down') {
+                data = {
+                    'x': e.clientX - canvas.offsetLeft - canvasDiv.offsetLeft,
+                    'y': e.clientY - canvas.offsetTop - canvasDiv.offsetTop
+                };
+                prevX = data['x'];
+                prevY = data['y'];
+
+                /*chatSocket.send(JSON.stringify({
+                    "type": "prevCoordinate",
+                    "coordinate": data
+                }));*/
+
+                flag = true;
+            }
+
+            if (res == 'up' || res == "out") {
+                flag = false;
+            }
+
+            if (res == 'move') {
+                if (flag) {
+                    data = {
+                        'x': e.clientX - canvas.offsetLeft - canvasDiv.offsetLeft,
+                        'y': e.clientY - canvas.offsetTop - canvasDiv.offsetTop
+                    };
+                    console.log(data);
+                    chatSocket.send(JSON.stringify({
+                        "type": "coordinate",
+                        "coordinate": data
+                    }));
+
+                    {#chatSocket.emit("drawCanvas", data);#}
+                    draw(data['x'], data['y']);
+                }
             }
         }
-    }
 
-    function clearCanvas() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    const roomName = JSON.parse(document.getElementById('room-name').textContent);
-    console.log('ODA NUMARASI:' + roomName);
-    console.log('nickname:' + nickname.text);
-
-    const chatSocket = new WebSocket(
-        'ws://'
-        + window.location.host
-        + '/ws/chat/'
-        + roomName
-        + '/'
-    );
-
-    chatSocket.onmessage = function (e) {
-        const data = JSON.parse(e.data);
-        const user_message = data.message;
-        document.querySelector('.chat-container').innerText += user_message + '\n';
-    };
-
-    chatSocket.onclose = function (e) {
-        console.error('Chat socket closed unexpectedly');
-    };
-
-    document.querySelector('#chat-message-input').focus();
-    document.querySelector('#chat-message-input').onkeyup = function (e) {
-        if (e.keyCode === 13) { //enter, return
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
-            console.log("sent:" + message)
-            messageInputDom.value = '';
-        }
-    };
-
-
-</script>
+    </script>
 
 {% endblock content %}
