@@ -49,33 +49,42 @@
         <div class="row" style="padding-top: 10px;">
 
             <div class="col">
-                <div class="brushColor" onclick="ctx.strokeStyle = 'black';"
+                <div class="brushColor"
+                     onclick="chatSocket.send(JSON.stringify({'type': 'brushColor', 'color': 'black'}));"
                      style="border-radius: 50%;width: 30px;height: 30px;background: black;"></div>
             </div>
             <div class="col">
-                <div class="brushColor" onclick="ctx.strokeStyle = 'blue';"
+                <div class="brushColor"
+                     onclick="chatSocket.send(JSON.stringify({'type': 'brushColor', 'color': 'blue'}));"
                      style="border-radius: 50%;width: 30px;height: 30px;background: blue;"></div>
             </div>
             <div class="col">
-                <div class="brushColor" onclick="ctx.strokeStyle = 'red';"
+                <div class="brushColor"
+                     onclick="chatSocket.send(JSON.stringify({'type': 'brushColor', 'color': 'red'}));"
                      style="border-radius: 50%;width: 30px;height: 30px;background: red;"></div>
             </div>
             <div class="col">
-                <div class="brushColor" onclick="ctx.strokeStyle = 'green';"
+                <div class="brushColor"
+                     onclick="chatSocket.send(JSON.stringify({'type': 'brushColor', 'color': 'green'}));"
                      style="border-radius: 50%; width:30px;height:30px;background:green;"></div>
             </div>
             <div class="col">
-                <div onclick="clearCanvas()" id="clearScreen" style="border-radius: 50%; width:30px;height:30px;">
+                <div onclick="chatSocket.send(JSON.stringify({'type': 'clearCanvas'}));"
+                     id="clearScreen" style="border-radius: 50%; width:30px;height:30px;">
                     clear
                 </div>
             </div>
             <div class="col">
-                <div onclick="ctx.strokeStyle = 'white';" style="border-radius: 50%; width:30px;height:30px;">erase
+                <div onclick="chatSocket.send(JSON.stringify({'type': 'brushColor', 'color': 'white'}));"
+                     style="border-radius: 50%; width:30px;height:30px;">
+                    erase
                 </div>
             </div>
             <div class="col">
                 <div class="slidecontainer" data-children-count="1">Size</div>
-                <input oninput="ctx.lineWidth=this.value;" type="range" class="slider" min="5" max="30" value="10">
+                <input oninput="chatSocket.send(JSON.stringify({'type': 'strokeSize', 'size': this.value}));"
+                       type="range" class="slider" min="5" max="30"
+                       value="10">
             </div>
         </div>
     </div>
@@ -96,7 +105,7 @@
         canvasDiv.style.border = "thick solid #0000FF";
         var ctx = canvas.getContext('2d');
         var flag = false, prevX = 0, prevY = 0;
-
+        var msg, coordinate, prevCoordinate;
 
         // Specifications
         ctx.lineCap = "round";
@@ -130,7 +139,6 @@
             prevY = newY;
         }
 
-
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
@@ -147,10 +155,37 @@
             + '/'
         );
 
+
         chatSocket.onmessage = function (e) {
-            const data = JSON.parse(e.data);
-            const user_message = data.message;
-            document.querySelector('.chat-container').innerText += user_message + '\n';
+            msg = JSON.parse(e.data);
+            console.log("MESSAGE", msg);
+            console.log("tipi:", msg.type);
+
+            switch (msg.type) {
+                case "chat_message":
+                    console.log("user message", msg['message']);
+                    document.querySelector('.chat-container').innerText += msg.message + '\n';
+                    break;
+
+                case "coordinate":
+                    coordinate = msg.coordinate;
+                    console.log("coordinate:", coordinate);
+                    draw(coordinate.x, coordinate.y);
+                    break;
+
+                case "prevCoordinate":
+                    prevCoordinate = msg.coordinate;
+                    updatePrev(prevCoordinate.x, prevCoordinate.y);
+                    break;
+
+                case "brushColor":
+                    updateColor(msg.color);
+                    break;
+
+                case "clear_canvas":
+                    clearCanvas();
+                    break;
+            }
         };
 
         chatSocket.onclose = function (e) {
@@ -171,19 +206,34 @@
             }
         };
 
+
+        function updateColor(color) {
+            ctx.strokeStyle = color;
+        }
+
+        function updateBrushSize(size) {
+            ctx.lineWidth = size;
+        }
+
+        function updatePrev(coordinate) {
+            prevX = coordinate.x;
+            prevY = coordinate.y;
+        }
+
         function findxy(res, e) {
             if (res == 'down') {
                 data = {
                     'x': e.clientX - canvas.offsetLeft - canvasDiv.offsetLeft,
                     'y': e.clientY - canvas.offsetTop - canvasDiv.offsetTop
                 };
+
                 prevX = data['x'];
                 prevY = data['y'];
 
-                /*chatSocket.send(JSON.stringify({
+                chatSocket.send(JSON.stringify({
                     "type": "prevCoordinate",
                     "coordinate": data
-                }));*/
+                }));
 
                 flag = true;
             }
@@ -198,14 +248,11 @@
                         'x': e.clientX - canvas.offsetLeft - canvasDiv.offsetLeft,
                         'y': e.clientY - canvas.offsetTop - canvasDiv.offsetTop
                     };
-                    console.log(data);
+
                     chatSocket.send(JSON.stringify({
-                        "type": "coordinate",
+                        "type": "stroke_coordinate",
                         "coordinate": data
                     }));
-
-                    {#chatSocket.emit("drawCanvas", data);#}
-                    draw(data['x'], data['y']);
                 }
             }
         }
