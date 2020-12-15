@@ -23,8 +23,10 @@
                         <ol class="list-group">
 
                             {% for folk in folks %}
-                                <li class="list-group-item"><span class="statusBoxUsername">{{ folk }} </span><span
-                                        class="statusBoxPoints">0 pts</span></li>
+                                <li class="list-group-item">
+                                    <span class="statusBoxUsername">{{ folk }}</span>
+                                    <span class="statusBoxPoints">0 pts</span>
+                                </li>
                             {% endfor %}
 
                         </ol>
@@ -105,7 +107,7 @@
         canvasDiv.style.border = "thick solid #0000FF";
         var ctx = canvas.getContext('2d');
         var flag = false, prevX = 0, prevY = 0;
-        var msg, coordinate, prevCoordinate;
+        var msg, coordinate, prevCoordinate, users;
 
         // Specifications
         ctx.lineCap = "round";
@@ -113,7 +115,7 @@
         ctx.fillStyle = "#000000";
         ctx.strokeStyle = 'black'; // initial brush color
         ctx.lineWidth = 10; // initial brush width
-        ctx.globalAlpha = 0.8;
+        ctx.globalAlpha = 1.0; // opacity
 
         canvas.addEventListener("mousemove", function (e) {
             console.log()
@@ -162,11 +164,6 @@
             console.log("tipi:", msg.type);
 
             switch (msg.type) {
-                case "chat_message":
-                    console.log("user message", msg['message']);
-                    document.querySelector('.chat-container').innerText += msg.message + '\n';
-                    break;
-
                 case "coordinate":
                     coordinate = msg.coordinate;
                     console.log("coordinate:", coordinate);
@@ -176,6 +173,21 @@
                 case "prevCoordinate":
                     prevCoordinate = msg.coordinate;
                     updatePrev(prevCoordinate.x, prevCoordinate.y);
+                    break;
+
+                case "chat_message":
+                    console.log("user message", msg['message']);
+                    document.querySelector('.chat-container').innerText += msg.message + '\n';
+                    break;
+
+                case "new_user":
+                    console.log("new user added:", msg.user);
+                    add_user(msg.user);
+                    break;
+
+                case "delete_user":
+                    console.log("user deleted:", msg.user);
+                    // delete_user(user);
                     break;
 
                 case "brushColor":
@@ -206,6 +218,30 @@
             }
         };
 
+        function add_user(user) {
+            let player_list_section = document.querySelector('.list-group');
+            var li = document.createElement('li');
+
+            var span1 = document.createElement('span');
+            span1.setAttribute('class', 'statusBoxUsername');
+            span1.innerHTML = user;
+            var span2 = document.createElement('span');
+            span2.setAttribute('class', 'statusBoxPoints');
+            span2.innerHTML = '0 pts';
+            li.appendChild(span1);
+            li.appendChild(span2);
+            player_list_section.appendChild(li);
+
+        }
+
+        function delete_user(username) {
+            let usernames = document.getElementsByClassName('list-group');
+            usernames.forEach(function (element, index, arr) {
+                if (element.innerHTML === username)
+                    arr.splice(index, 1);
+            });
+
+        }
 
         function updateColor(color) {
             ctx.strokeStyle = color;

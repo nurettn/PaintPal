@@ -26,6 +26,7 @@ def index(request):
                 room.artists.add(artist)
                 folks = Room.objects.get(name=room_code).artists \
                     .values_list('nickname', flat=True)
+                request.session["nickname"] = artist.nickname
                 context = {'room_code': room_code,
                            'folks': folks,
                            'nickname': artist.nickname}
@@ -44,7 +45,6 @@ def index(request):
                                            'same nickname on the room. '
                                            'Please set another nickname %s.' \
                                   % (artist.nickname), fail_silently=True)
-
                     context = {'host_room_form': host_room_form,
                                'join_room_form': join_room_form}
                     return render(request, 'index.html', context)
@@ -53,6 +53,7 @@ def index(request):
                     room.artists.add(artist)
                     folks = Room.objects.get(name=room_code) \
                         .artists.values_list('nickname', flat=True)
+                    request.session["nickname"] = artist.nickname
                     context = {'room_code': room_code,
                                'folks': folks,
                                'nickname': artist.nickname}

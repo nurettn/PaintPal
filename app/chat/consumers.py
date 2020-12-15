@@ -1,25 +1,51 @@
 import json
+import pprint
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
+from .models import Room, Artist
+from asgiref.sync import async_to_sync
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
-
+        self.nickname = self.scope['session'].get("nickname")
         # Join room group
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
-        await self.accept()
+        if not self.nickname:
+            await self.close()
+        else:
+            await self.accept()
+            await self.notify_new_user()
 
     async def disconnect(self, close_code):
         # Leave room group
+        if self.nickname:
+            await self.remove_user()
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
+
+    async def notify_new_user(self):
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "new_user",
+                "user": self.nickname
+            })
+
+    async def remove_user(self):
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "delete_user",
+                "user": self.nickname
+            })
 
     # Receive message from WebSocket
     async def receive(self, text_data):
@@ -134,4 +160,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def clear_canvas(self, event):
         await self.send(text_data=json.dumps({
             'type': 'clear_canvas'
+        }))
+
+    async def new_user(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'new_user',
+            'user': self.nickname
+        }))
+
+    async def delete_user(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'delete_user',
+            'user': self.nickname
         }))
