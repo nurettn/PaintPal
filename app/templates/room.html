@@ -180,6 +180,10 @@
                     document.querySelector('.chat-container').innerText += msg.message + '\n';
                     break;
 
+                case "update_playerlist":
+                    console.log("new user added:", msg.users);
+                    break;
+
                 case "new_user":
                     console.log("new user added:", msg.user);
                     add_user(msg.user);

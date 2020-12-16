@@ -20,7 +20,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
         else:
             await self.accept()
-            await self.notify_new_user()
+            # await self.notify_new_user() # todo delete
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -160,6 +160,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def clear_canvas(self, event):
         await self.send(text_data=json.dumps({
             'type': 'clear_canvas'
+        }))
+
+    async def update_playerlist(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'update_playerlist',
+            'users': event['users']
         }))
 
     async def new_user(self, event):
