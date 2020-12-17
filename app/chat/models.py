@@ -26,14 +26,12 @@ def artists_changed(instance, *args, **kwargs):
     # broadcast playerlist to room
     if artists_count > 1:
         room_code = instance.name
-        print('broadcasting to ', room_code, artists_count)
-        room_folks = Room.objects.get(name=room_code) \
-            .artists.values_list('nickname', flat=True)
-
-        # todo serialize room_folks and broadcast
+        room_folks = Room.objects\
+            .get(name=room_code).artists\
+            .values_list('nickname', flat=True)
+        room_folks = list(room_folks)
         room_group_name = 'chat_%s' % room_code
-        # broadcast_msg_to_chat(room_folks,
-        #                       room_group_name)
+        broadcast_msg_to_chat(room_folks, room_group_name,'update_playerlist')
 
     # make the room active
     if not instance.active and artists_count == 1:
