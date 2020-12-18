@@ -21,10 +21,9 @@ def index(request):
             if host_form.is_valid():
                 artist = host_form.save(commit=True)
                 room_code = get_random_string(length=6).upper()
-                # todo check if the room exists and/or active
                 room = Room.objects.create(name=room_code)
                 room.artists.add(artist)
-                folks = Room.objects.get(name=room_code).artists \
+                folks = Room.objects.get(name=room_code).artists\
                     .values_list('nickname', flat=True)
                 request.session["nickname"] = artist.nickname
                 context = {'room_code': room_code,
