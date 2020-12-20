@@ -1,9 +1,5 @@
 import json
-import pprint
 from channels.generic.websocket import AsyncWebsocketConsumer
-from channels.db import database_sync_to_async
-from .models import Room, Artist
-from asgiref.sync import async_to_sync
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -20,7 +16,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
         else:
             await self.accept()
-            # await self.notify_new_user() # todo delete
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -31,13 +26,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-    async def notify_new_user(self):
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                "type": "new_user",
-                "user": self.nickname
-            })
 
     async def remove_user(self):
         await self.channel_layer.group_send(
@@ -165,13 +153,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def update_playerlist(self, event):
         await self.send(text_data=json.dumps({
             'type': 'update_playerlist',
-            'users': event['users']
-        }))
-
-    async def new_user(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'new_user',
-            'user': self.nickname
+            'users': event['message']
         }))
 
     async def delete_user(self, event):

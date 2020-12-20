@@ -1,7 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_save, pre_save, m2m_changed
-from django.core.serializers import serialize
-import json
+from django.db.models.signals import m2m_changed
 import logging
 
 from .utils import broadcast_msg_to_chat
@@ -31,8 +29,7 @@ def artists_changed(instance, *args, **kwargs):
             .values_list('nickname', flat=True)
         room_folks = list(room_folks)
         room_group_name = 'chat_%s' % room_name
-        print()
-        broadcast_msg_to_chat(room_folks, room_group_name,'update_playerlist')
+        broadcast_msg_to_chat(room_folks, room_group_name)
 
     # make the room active
     if not instance.active and artists_count == 1:
