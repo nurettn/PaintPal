@@ -181,13 +181,7 @@
                     break;
 
                 case "update_playerlist":
-                    console.log("playerlist:", msg.users);
-                    // update_artistlist(msg.users)
-                    break;
-
-                case "new_user":
-                    console.log("new user added:", msg.user);
-                    add_user(msg.user);
+                    update_artistlist(msg.users)
                     break;
 
                 case "delete_user":
@@ -223,19 +217,35 @@
             }
         };
 
-        function update_artistlist(users) {
+        function update_artistlist(usernames) {
             let player_list_section = document.querySelector('.list-group');
-            var li = document.createElement('li');
+            artistlist_old = player_list_section.getElementsByClassName('statusBoxUsername');
 
-            var span1 = document.createElement('span');
-            span1.setAttribute('class', 'statusBoxUsername');
-            span1.innerHTML = user;
-            var span2 = document.createElement('span');
-            span2.setAttribute('class', 'statusBoxPoints');
-            span2.innerHTML = '0 pts';
-            li.appendChild(span1);
-            li.appendChild(span2);
-            player_list_section.appendChild(li);
+            var innerHtmls = [];
+
+            for (const elem of artistlist_old) {
+                innerHtmls.push(elem.innerHTML);
+            }
+
+            // get newcomers
+            let new_artists = usernames.filter(x => !innerHtmls.includes(x));
+            new_artists.forEach(function (nickname) {
+
+                var li = document.createElement('li');
+                li.setAttribute('class', 'list-group-item');
+
+                var span1 = document.createElement('span');
+                span1.setAttribute('class', 'statusBoxUsername');
+                span1.innerHTML = nickname + " ";
+
+                var span2 = document.createElement('span');
+                span2.setAttribute('class', 'statusBoxPoints');
+                span2.innerHTML = '0 pts';
+
+                li.appendChild(span1);
+                li.appendChild(span2);
+                player_list_section.appendChild(li);
+            });
         }
 
         function delete_user(username) {
@@ -297,5 +307,4 @@
         }
 
     </script>
-
 {% endblock content %}
