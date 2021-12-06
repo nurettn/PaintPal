@@ -14,7 +14,7 @@ git clone https://github.com/nurettinabaci/PaintPal.git
 
 2. Go to project folder and create a Docker image
 ```bash
-sudo docker build --tag drawing.game:latest
+sudo docker build --tag drawing.game:latest .
 ```
 
 3. Run a container from image
