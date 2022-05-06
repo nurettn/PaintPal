@@ -1,4 +1,4 @@
-FROM python:3.9-alpine
+FROM python:3.8-alpine
 MAINTAINER Nurettin ABACI
 
 ENV PYTHONUNBUFFERED 1
@@ -10,7 +10,7 @@ RUN pip install -r requirements.txt
 
 RUN mkdir /app
 WORKDIR /app
-COPY ./app /app
+COPY . /app
 
 RUN adduser -D user
 USER user
